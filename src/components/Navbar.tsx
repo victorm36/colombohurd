@@ -26,13 +26,10 @@ const Navbar = () => {
           <Link href="/informacion" className={isActive('/informacion') ? 'active' : ''}>
             Información
           </Link>
-          <Link href="/informacion" className={isActive('/informacion') ? 'active' : ''}>
-            Prueba Info
-          </Link>
           <Link href="/equipo" className={isActive('/equipo') ? 'active' : ''}>
             Equipo
           </Link>
-          <Link href="/eb2-niw" className={isActive('/eb2-niw') ? 'active' : ''}>
+          <Link href="/noticias" className={isActive('/noticias') ? 'active' : ''}>
             Noticias
           </Link>
           <Link href="/contacto" className={isActive('/contacto') ? 'active' : ''}>
