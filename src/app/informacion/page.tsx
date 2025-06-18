@@ -1,12 +1,13 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
+import FooterContacto from '@/components/FooterContacto';
 
 export default function H1BPage() {
   return (
     <main>
       <Navbar />
-      <section className="section" style={{ padding: 0 }}>
-        <h1 className="section-title">Visa H1B</h1>
+      <div style={{ height: '80px' }} />
+      <section className="section" style={{ padding: 0, marginBottom: 0 }}>
         <div className="flex flex-col md:flex-row gap-0 shadow-lg overflow-hidden min-h-[400px] w-full">
           {/* Columna izquierda: Información H1B */}
           <div className="flex-1 bg-[var(--azul-legal)] text-white p-10 md:p-20 flex flex-col justify-center min-h-[400px]">
@@ -126,6 +127,13 @@ export default function H1BPage() {
           </div>
         </div>
       </section>
+      {/* Espacio extra antes del footer */}
+      <div style={{ marginTop: '80px' }} />
+      {/* Línea dorada animada de separación */}
+      <div className="w-full flex justify-center">
+        <div className="h-1 bg-[var(--dorado-elegante)] rounded animate-grow-line" style={{ width: '220px' }} />
+      </div>
+      <FooterContacto />
     </main>
   );
 } 
