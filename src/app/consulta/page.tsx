@@ -216,14 +216,6 @@ export default function ConsultaForm() {
     limpiarFormulario();
   };
 
-  // Mapas para mostrar el texto de la respuesta
-  const textoNivel = nivel === "tecnico" ? "Técnico / Tecnológico" : nivel === "universitario" ? "Universitario" : nivel === "postgrado" ? "Postgrado (Maestría / Doctorado)" : "-";
-  const textoOferta = oferta === 0 ? "Sí" : oferta === 1 ? "No" : "-";
-  const textoTitulo = titulo === 0 ? "Sí" : titulo === 1 ? "No" : "-";
-  const textoExperiencia = experiencia === 0 ? "Sí" : experiencia === 1 ? "No" : "-";
-  const textoImpacto = impacto === 0 ? "Sí" : impacto === 1 ? "No" : "-";
-  const textoResidencia = residencia === 0 ? "Estados Unidos" : residencia === 1 ? "Colombia" : "-";
-
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 py-20 px-2 md:px-4">
       <div className="w-full max-w-xl flex flex-col items-center mx-auto">
