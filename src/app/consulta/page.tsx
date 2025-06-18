@@ -1,35 +1,54 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import emailjs from 'emailjs-com';
 
 export default function ConsultaForm() {
-  // Estado interno para las variables A, B, C, D, E
-  const [valores, setValores] = useState({
-    A: null, // oferta laboral
-    B: null, // título universitario
-    C: null, // experiencia laboral
-    D: null, // impacto significativo
-    E: null, // lugar de residencia
-  });
+  // Estado para los campos del formulario
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [nivel, setNivel] = useState("");
+
+  // Estado para las preguntas (mantener nombres simples)
+  const [oferta, setOferta] = useState<number|null>(null); // Pregunta 1
+  const [titulo, setTitulo] = useState<number|null>(null); // Pregunta 2
+  const [experiencia, setExperiencia] = useState<number|null>(null); // Pregunta 3
+  const [impacto, setImpacto] = useState<number|null>(null); // Pregunta 4
+  const [residencia, setResidencia] = useState<number|null>(null); // Pregunta 5
 
   // Estado para mostrar/ocultar el modal
   const [mostrarModal, setMostrarModal] = useState(false);
 
+  // Estado para la visa posible
+  const [visaPosible, setVisaPosible] = useState('');
+
   // Limpiar los valores al desmontar el componente
   useEffect(() => {
     return () => {
-      setValores({ A: null, B: null, C: null, D: null, E: null });
+      setNombre("");
+      setCorreo("");
+      setTelefono("");
+      setNivel("");
+      setOferta(null);
+      setTitulo(null);
+      setExperiencia(null);
+      setImpacto(null);
+      setResidencia(null);
     };
   }, []);
 
-  // Función para manejar el cambio de cada pregunta
-  const handleChange = (variable: 'A' | 'B' | 'C' | 'D' | 'E', valor: number) => {
-    setValores((prev) => ({ ...prev, [variable]: valor }));
-  };
-
   // Función para limpiar todo el formulario
   const limpiarFormulario = () => {
-    setValores({ A: null, B: null, C: null, D: null, E: null });
+    setNombre("");
+    setCorreo("");
+    setTelefono("");
+    setNivel("");
+    setOferta(null);
+    setTitulo(null);
+    setExperiencia(null);
+    setImpacto(null);
+    setResidencia(null);
     // Limpiar los radio buttons manualmente
     const inputs = document.querySelectorAll('input[type="radio"]');
     inputs.forEach((input) => {
@@ -42,9 +61,152 @@ export default function ConsultaForm() {
     });
   };
 
+  // Lista de combinaciones exactas y su resultado
+  const combinaciones = [
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 0, impacto: 0, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 0, impacto: 0, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 0, impacto: 1, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 0, impacto: 1, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 1, impacto: 0, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 1, impacto: 0, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 1, impacto: 1, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 0, experiencia: 1, impacto: 1, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 0, impacto: 0, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 0, impacto: 0, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 0, impacto: 1, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 0, impacto: 1, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 1, impacto: 0, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 1, impacto: 0, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 1, impacto: 1, residencia: 0, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 0, titulo: 1, experiencia: 1, impacto: 1, residencia: 1, visa: 'H2B, EB3 (no-skilled)' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 0, impacto: 0, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 0, impacto: 0, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 0, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 0, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 1, impacto: 0, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 1, impacto: 0, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 1, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 0, experiencia: 1, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 0, impacto: 0, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 0, impacto: 0, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 0, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 0, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 1, impacto: 0, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 1, impacto: 0, residencia: 1, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 1, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'tecnico', oferta: 1, titulo: 1, experiencia: 1, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 0, impacto: 0, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 0, impacto: 0, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 0, impacto: 1, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 0, impacto: 1, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 1, impacto: 0, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 1, impacto: 0, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 1, impacto: 1, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 0, experiencia: 1, impacto: 1, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 0, impacto: 0, residencia: 0, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 0, impacto: 0, residencia: 1, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 0, impacto: 1, residencia: 0, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 0, impacto: 1, residencia: 1, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 1, impacto: 0, residencia: 0, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 1, impacto: 0, residencia: 1, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 1, impacto: 1, residencia: 0, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 0, titulo: 1, experiencia: 1, impacto: 1, residencia: 1, visa: 'EB3' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 0, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 0, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 0, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 0, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 1, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 1, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 1, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 0, experiencia: 1, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 0, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 0, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 0, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 0, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 1, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 1, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 1, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'universitario', oferta: 1, titulo: 1, experiencia: 1, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 0, impacto: 0, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 0, impacto: 0, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 0, impacto: 1, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 0, impacto: 1, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 1, impacto: 0, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 1, impacto: 0, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 1, impacto: 1, residencia: 0, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 0, experiencia: 1, impacto: 1, residencia: 1, visa: 'H1B, EB2, EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 0, impacto: 0, residencia: 0, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 0, impacto: 0, residencia: 1, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 0, impacto: 1, residencia: 0, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 0, impacto: 1, residencia: 1, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 1, impacto: 0, residencia: 0, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 1, impacto: 0, residencia: 1, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 1, impacto: 1, residencia: 0, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 0, titulo: 1, experiencia: 1, impacto: 1, residencia: 1, visa: 'EB3' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 0, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 0, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 0, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 0, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 1, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 1, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 1, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 0, experiencia: 1, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 0, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 0, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 0, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 0, impacto: 1, residencia: 1, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 1, impacto: 0, residencia: 0, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 1, impacto: 0, residencia: 1, visa: 'EB2 NIW' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 1, impacto: 1, residencia: 0, visa: 'No aplica' },
+    { nivel: 'postgrado', oferta: 1, titulo: 1, experiencia: 1, impacto: 1, residencia: 1, visa: 'No aplica' },
+  ];
+
+  // Función para determinar la visa posible según la combinación exacta
+  function determinarVisaExacta() {
+    const resultado = combinaciones.find(c =>
+      c.nivel === nivel &&
+      c.oferta === oferta &&
+      c.titulo === titulo &&
+      c.experiencia === experiencia &&
+      c.impacto === impacto &&
+      c.residencia === residencia
+    );
+    return resultado ? resultado.visa : 'No aplica';
+  }
+
   // Manejar el envío del formulario
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Construir el objeto con los datos
+    const datos = {
+      to_email: 'colombo.hurdlaw01@gmail.com',
+      nombre,
+      correo,
+      telefono,
+      nivel,
+      oferta,
+      titulo,
+      experiencia,
+      impacto,
+      residencia,
+      visaPosible: determinarVisaExacta()
+    };
+
+    // Enviar el correo con EmailJS
+    try {
+      await emailjs.send(
+        'service_oyt1tpk',
+        'template_0dl3ykt',
+        datos,
+        '6Sfh92g7sR2X2Sbdb'
+      );
+    } catch (error) {
+      // Puedes mostrar un mensaje de error si lo deseas
+      console.error('Error enviando el correo:', error);
+    }
+
+    setVisaPosible(datos.visaPosible);
     setMostrarModal(true);
   };
 
@@ -55,13 +217,12 @@ export default function ConsultaForm() {
   };
 
   // Mapas para mostrar el texto de la respuesta
-  const respuestasTexto = {
-    A: valores.A === 0 ? 'Sí' : valores.A === 1 ? 'No' : '-',
-    B: valores.B === 0 ? 'Sí' : valores.B === 1 ? 'No' : '-',
-    C: valores.C === 0 ? 'Sí' : valores.C === 1 ? 'No' : '-',
-    D: valores.D === 0 ? 'Sí' : valores.D === 1 ? 'No' : '-',
-    E: valores.E === 0 ? 'Estados Unidos' : valores.E === 1 ? 'Colombia' : '-',
-  };
+  const textoNivel = nivel === "tecnico" ? "Técnico / Tecnológico" : nivel === "universitario" ? "Universitario" : nivel === "postgrado" ? "Postgrado (Maestría / Doctorado)" : "-";
+  const textoOferta = oferta === 0 ? "Sí" : oferta === 1 ? "No" : "-";
+  const textoTitulo = titulo === 0 ? "Sí" : titulo === 1 ? "No" : "-";
+  const textoExperiencia = experiencia === 0 ? "Sí" : experiencia === 1 ? "No" : "-";
+  const textoImpacto = impacto === 0 ? "Sí" : impacto === 1 ? "No" : "-";
+  const textoResidencia = residencia === 0 ? "Estados Unidos" : residencia === 1 ? "Colombia" : "-";
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 py-20 px-2 md:px-4">
@@ -81,29 +242,35 @@ export default function ConsultaForm() {
           <div className="flex flex-col gap-8 w-full">
             <div>
               <label className="block font-semibold mb-2 text-[var(--azul-legal)] text-lg md:text-xl">Nombre</label>
-              <input type="text" name="nombre" className="w-full rounded-xl border border-blue-200 focus:border-[var(--dorado-elegante)] focus:ring-2 focus:ring-[var(--dorado-elegante)] bg-blue-50/60 px-6 py-4 text-lg md:text-xl transition-all duration-200 outline-none" />
+              <input type="text" name="nombre" className="w-full rounded-xl border border-blue-200 focus:border-[var(--dorado-elegante)] focus:ring-2 focus:ring-[var(--dorado-elegante)] bg-blue-50/60 px-6 py-4 text-lg md:text-xl transition-all duration-200 outline-none" 
+                value={nombre} onChange={e => setNombre(e.target.value)} />
             </div>
             <div>
               <label className="block font-semibold mb-2 text-[var(--azul-legal)] text-lg md:text-xl">Correo electrónico</label>
-              <input type="email" name="email" className="w-full rounded-xl border border-blue-200 focus:border-[var(--dorado-elegante)] focus:ring-2 focus:ring-[var(--dorado-elegante)] bg-blue-50/60 px-6 py-4 text-lg md:text-xl transition-all duration-200 outline-none" />
+              <input type="email" name="email" className="w-full rounded-xl border border-blue-200 focus:border-[var(--dorado-elegante)] focus:ring-2 focus:ring-[var(--dorado-elegante)] bg-blue-50/60 px-6 py-4 text-lg md:text-xl transition-all duration-200 outline-none" 
+                value={correo} onChange={e => setCorreo(e.target.value)} />
             </div>
             <div>
               <label className="block font-semibold mb-2 text-[var(--azul-legal)] text-lg md:text-xl">Teléfono</label>
-              <input type="tel" name="telefono" className="w-full rounded-xl border border-blue-200 focus:border-[var(--dorado-elegante)] focus:ring-2 focus:ring-[var(--dorado-elegante)] bg-blue-50/60 px-6 py-4 text-lg md:text-xl transition-all duration-200 outline-none" />
+              <input type="tel" name="telefono" className="w-full rounded-xl border border-blue-200 focus:border-[var(--dorado-elegante)] focus:ring-2 focus:ring-[var(--dorado-elegante)] bg-blue-50/60 px-6 py-4 text-lg md:text-xl transition-all duration-200 outline-none" 
+                value={telefono} onChange={e => setTelefono(e.target.value)} />
             </div>
             <div>
               <label className="block font-semibold mb-3 text-[var(--azul-legal)] text-lg md:text-xl">Nivel académico</label>
               <div className="flex flex-col gap-4 mt-2">
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="nivel" value="tecnico" className="accent-[var(--azul-legal)]" />
+                  <input type="radio" name="nivel" value="tecnico" className="accent-[var(--azul-legal)]" 
+                    checked={nivel === "tecnico"} onChange={() => setNivel("tecnico")} />
                   Técnico / Tecnológico
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="nivel" value="universitario" className="accent-[var(--azul-legal)]" />
+                  <input type="radio" name="nivel" value="universitario" className="accent-[var(--azul-legal)]" 
+                    checked={nivel === "universitario"} onChange={() => setNivel("universitario")} />
                   Universitario
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="nivel" value="postgrado" className="accent-[var(--azul-legal)]" />
+                  <input type="radio" name="nivel" value="postgrado" className="accent-[var(--azul-legal)]" 
+                    checked={nivel === "postgrado"} onChange={() => setNivel("postgrado")} />
                   Postgrado (Maestría / Doctorado)
                 </label>
               </div>
@@ -124,10 +291,10 @@ export default function ConsultaForm() {
               <label className="font-semibold text-[var(--azul-legal)] text-lg md:text-xl mb-3 block">1. ¿Tiene una oferta laboral de una empresa en EE.UU.?</label>
               <div className="flex gap-10 mt-2 ml-2">
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="oferta" value="si" className="accent-[var(--azul-legal)]" onChange={() => handleChange('A', 0)} /> Sí
+                  <input type="radio" name="oferta" value="si" className="accent-[var(--azul-legal)]" onChange={() => setOferta(0)} checked={oferta === 0} /> Sí
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="oferta" value="no" className="accent-[var(--azul-legal)]" onChange={() => handleChange('A', 1)} /> No
+                  <input type="radio" name="oferta" value="no" className="accent-[var(--azul-legal)]" onChange={() => setOferta(1)} checked={oferta === 1} /> No
                 </label>
               </div>
             </div>
@@ -135,10 +302,10 @@ export default function ConsultaForm() {
               <label className="font-semibold text-[var(--azul-legal)] text-lg md:text-xl mb-3 block">2. ¿Su trabajo requiere título universitario?</label>
               <div className="flex gap-10 mt-2 ml-2">
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="titulo" value="si" className="accent-[var(--azul-legal)]" onChange={() => handleChange('B', 0)} /> Sí
+                  <input type="radio" name="titulo" value="si" className="accent-[var(--azul-legal)]" onChange={() => setTitulo(0)} checked={titulo === 0} /> Sí
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="titulo" value="no" className="accent-[var(--azul-legal)]" onChange={() => handleChange('B', 1)} /> No
+                  <input type="radio" name="titulo" value="no" className="accent-[var(--azul-legal)]" onChange={() => setTitulo(1)} checked={titulo === 1} /> No
                 </label>
               </div>
             </div>
@@ -146,10 +313,10 @@ export default function ConsultaForm() {
               <label className="font-semibold text-[var(--azul-legal)] text-lg md:text-xl mb-3 block">3. ¿Posee experiencia laboral de al menos dos años en su campo?</label>
               <div className="flex gap-10 mt-2 ml-2">
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="experiencia" value="si" className="accent-[var(--azul-legal)]" onChange={() => handleChange('C', 0)} /> Sí
+                  <input type="radio" name="experiencia" value="si" className="accent-[var(--azul-legal)]" onChange={() => setExperiencia(0)} checked={experiencia === 0} /> Sí
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="experiencia" value="no" className="accent-[var(--azul-legal)]" onChange={() => handleChange('C', 1)} /> No
+                  <input type="radio" name="experiencia" value="no" className="accent-[var(--azul-legal)]" onChange={() => setExperiencia(1)} checked={experiencia === 1} /> No
                 </label>
               </div>
             </div>
@@ -157,10 +324,10 @@ export default function ConsultaForm() {
               <label className="font-semibold text-[var(--azul-legal)] text-lg md:text-xl mb-3 block">4. ¿Puede demostrar que su trabajo tiene un impacto significativo en EE.UU.?</label>
               <div className="flex gap-10 mt-2 ml-2">
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="impacto" value="si" className="accent-[var(--azul-legal)]" onChange={() => handleChange('D', 0)} /> Sí
+                  <input type="radio" name="impacto" value="si" className="accent-[var(--azul-legal)]" onChange={() => setImpacto(0)} checked={impacto === 0} /> Sí
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="impacto" value="no" className="accent-[var(--azul-legal)]" onChange={() => handleChange('D', 1)} /> No
+                  <input type="radio" name="impacto" value="no" className="accent-[var(--azul-legal)]" onChange={() => setImpacto(1)} checked={impacto === 1} /> No
                 </label>
               </div>
             </div>
@@ -169,10 +336,10 @@ export default function ConsultaForm() {
               <label className="font-semibold text-[var(--azul-legal)] text-lg md:text-xl mb-3 block">5. ¿Cuál es su lugar de residencia?</label>
               <div className="flex gap-10 mt-2 ml-2">
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="residencia" value="estados_unidos" className="accent-[var(--azul-legal)]" onChange={() => handleChange('E', 0)} /> Estados Unidos
+                  <input type="radio" name="residencia" value="estados_unidos" className="accent-[var(--azul-legal)]" onChange={() => setResidencia(0)} checked={residencia === 0} /> Estados Unidos
                 </label>
                 <label className="flex items-center gap-3 text-base md:text-lg">
-                  <input type="radio" name="residencia" value="colombia" className="accent-[var(--azul-legal)]" onChange={() => handleChange('E', 1)} /> Colombia
+                  <input type="radio" name="residencia" value="colombia" className="accent-[var(--azul-legal)]" onChange={() => setResidencia(1)} checked={residencia === 1} /> Colombia
                 </label>
               </div>
             </div>
@@ -188,14 +355,12 @@ export default function ConsultaForm() {
       {mostrarModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full relative animate-fade-in">
-            <h2 className="text-2xl font-bold mb-6 text-center text-[var(--azul-legal)]">Respuestas seleccionadas</h2>
-            <ul className="mb-8 text-lg">
-              <li><b>1. ¿Tiene una oferta laboral de una empresa en EE.UU.?</b> <br />Respuesta: {respuestasTexto.A}</li>
-              <li className="mt-4"><b>2. ¿Su trabajo requiere título universitario?</b> <br />Respuesta: {respuestasTexto.B}</li>
-              <li className="mt-4"><b>3. ¿Posee experiencia laboral de al menos dos años en su campo?</b> <br />Respuesta: {respuestasTexto.C}</li>
-              <li className="mt-4"><b>4. ¿Puede demostrar que su trabajo tiene un impacto significativo en EE.UU.?</b> <br />Respuesta: {respuestasTexto.D}</li>
-              <li className="mt-4"><b>5. ¿Cuál es su lugar de residencia?</b> <br />Respuesta: {respuestasTexto.E}</li>
-            </ul>
+            <h2 className="text-2xl font-bold mb-6 text-center text-[var(--azul-legal)]">Resultado</h2>
+            <div className="mb-8 text-xl font-bold text-center text-[var(--azul-legal)]">
+              {nombre ? `${nombre}, puedes optar por las siguientes visas:` : 'Puedes optar por las siguientes visas:'}
+              <br />
+              <span className="text-[var(--dorado-elegante)]">{visaPosible}</span>
+            </div>
             <button onClick={handleCerrarModal} className="w-full py-3 rounded-lg bg-[var(--azul-legal)] text-white text-lg font-semibold shadow-md hover:bg-blue-900 transition-all duration-300 uppercase tracking-wider focus:outline-none focus:ring-4 focus:ring-blue-200">Cerrar</button>
           </div>
         </div>

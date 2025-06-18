@@ -16,7 +16,7 @@ const Navbar = () => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '1400px', margin: '0 auto', height: '80px', padding: '0 2rem' }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', height: '60px' }}>
-          <Image src="/logo.png" alt="Colombo & Hurd Logo" width={150} height={60} style={{ objectFit: 'contain', height: '60px', width: 'auto' }} priority />
+          <Image src="/Logo.png" alt="Colombo & Hurd Logo" width={150} height={60} style={{ objectFit: 'contain', height: '60px', width: 'auto' }} priority />
         </Link>
         {/* Enlaces */}
         <div className="nav-links" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: '2.5rem' }}>
