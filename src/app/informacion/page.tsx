@@ -83,9 +83,17 @@ export default function InformacionPage() {
               Para profesionales con títulos avanzados o habilidades excepcionales que buscan residencia permanente. Requiere patrocinio de empleador o demostración de habilidad excepcional.
             </p>
           </div>
-          {/* Columna derecha: Espacio en blanco */}
+          {/* Columna derecha: Video EB2 */}
           <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-20 min-h-[400px]">
-            {/* Espacio en blanco */}
+            <div className="flex items-center justify-center w-full h-full">
+              <video
+                src="/EB2.mp4"
+                controls
+                style={{ maxWidth: '100%', maxHeight: '340px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)' }}
+              >
+                Tu navegador no soporta el video.
+              </video>
+            </div>
           </div>
         </div>
 
@@ -111,6 +119,31 @@ export default function InformacionPage() {
             }}>
               Permite solicitar residencia permanente sin oferta laboral si demuestras que tu trabajo beneficia al interés nacional. Ideal para investigadores, científicos y profesionales destacados.
             </p>
+          </div>
+        </div>
+
+        {/* Quinta fila: Visa EB3, información a la izquierda */}
+        <div className="flex flex-col md:flex-row gap-0 shadow-lg overflow-hidden min-h-[400px] w-full mt-16">
+          {/* Columna izquierda: Información EB3 */}
+          <div className="flex-1 bg-[var(--azul-legal)] text-white p-10 md:p-20 flex flex-col justify-center min-h-[400px]">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white animate-pulse" style={{
+              background: 'linear-gradient(45deg, #ffffff, #fbbf24, #ffffff)',
+              backgroundSize: '200% 200%',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              animation: 'gradient 3s ease infinite'
+            }}>
+              Visa EB3
+            </h2>
+            <p className="text-lg md:text-xl leading-relaxed text-white/90 animate-fade-in" style={{
+              animation: 'fadeInUp 1s ease-out'
+            }}>
+              La visa EB3 permite a trabajadores calificados, no calificados y profesionales obtener la residencia permanente en Estados Unidos a través de una oferta laboral. Es ideal para quienes buscan oportunidades de empleo en diversas áreas, incluso sin título universitario. Requiere una oferta de trabajo y el patrocinio de un empleador estadounidense.
+            </p>
+          </div>
+          {/* Columna derecha: Espacio en blanco */}
+          <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-20 min-h-[400px]">
+            {/* Espacio en blanco */}
           </div>
         </div>
       </section>
