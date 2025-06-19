@@ -1,0 +1,41 @@
+.custom-swiper-nav {
+  color: #b8860b;
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.swiper-button-prev.custom-swiper-nav {
+  left: -32px;
+}
+.swiper-button-next.custom-swiper-nav {
+  right: -32px;
+}
+
+@media (max-width: 900px) {
+  .swiper-button-prev.custom-swiper-nav {
+    left: -12px;
+  }
+  .swiper-button-next.custom-swiper-nav {
+    right: -12px;
+  }
+}
+
+.custom-swiper-nav::after {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Ocultar las flechas azules por defecto de Swiper */
+.swiper-button-prev:not(.custom-swiper-nav),
+.swiper-button-next:not(.custom-swiper-nav) {
+  display: none !important;
+} 

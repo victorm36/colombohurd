@@ -1,6 +1,7 @@
 import React from 'react';
 import FooterContacto from '@/components/FooterContacto';
 import Link from 'next/link';
+import TestimoniosCarrusel from '@/components/TestimoniosCarrusel';
 
 export default function InformacionPage() {
   return (
@@ -41,9 +42,17 @@ export default function InformacionPage() {
 
         {/* Segunda fila: Visa H2B, información a la derecha */}
         <div className="flex flex-col md:flex-row gap-0 shadow-lg overflow-hidden min-h-[400px] w-full mt-16">
-          {/* Columna izquierda: Espacio en blanco */}
+          {/* Columna izquierda: Video H2B */}
           <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-20 min-h-[400px]">
-            {/* Espacio en blanco */}
+            <div className="flex items-center justify-center w-full h-full">
+              <video
+                src="/H2B.mp4"
+                controls
+                style={{ maxWidth: '100%', maxHeight: '340px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)' }}
+              >
+                Tu navegador no soporta el video.
+              </video>
+            </div>
           </div>
           {/* Columna derecha: Información H2B */}
           <div className="flex-1 bg-[var(--azul-legal)] text-white p-10 md:p-20 flex flex-col justify-center min-h-[400px]">
@@ -99,9 +108,17 @@ export default function InformacionPage() {
 
         {/* Cuarta fila: Visa EB2-NIW, información a la derecha */}
         <div className="flex flex-col md:flex-row gap-0 shadow-lg overflow-hidden min-h-[400px] w-full mt-16">
-          {/* Columna izquierda: Espacio en blanco */}
+          {/* Columna izquierda: Video EB2-NIW */}
           <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-20 min-h-[400px]">
-            {/* Espacio en blanco */}
+            <div className="flex items-center justify-center w-full h-full">
+              <video
+                src="/EB2NIW.mp4"
+                controls
+                style={{ maxWidth: '100%', maxHeight: '340px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)' }}
+              >
+                Tu navegador no soporta el video.
+              </video>
+            </div>
           </div>
           {/* Columna derecha: Información EB2-NIW */}
           <div className="flex-1 bg-[var(--azul-legal)] text-white p-10 md:p-20 flex flex-col justify-center min-h-[400px]">
@@ -141,11 +158,22 @@ export default function InformacionPage() {
               La visa EB3 permite a trabajadores calificados, no calificados y profesionales obtener la residencia permanente en Estados Unidos a través de una oferta laboral. Es ideal para quienes buscan oportunidades de empleo en diversas áreas, incluso sin título universitario. Requiere una oferta de trabajo y el patrocinio de un empleador estadounidense.
             </p>
           </div>
-          {/* Columna derecha: Espacio en blanco */}
+          {/* Columna derecha: Video EB3 */}
           <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-20 min-h-[400px]">
-            {/* Espacio en blanco */}
+            <div className="flex items-center justify-center w-full h-full">
+              <video
+                src="/EB3.mp4"
+                controls
+                style={{ maxWidth: '100%', maxHeight: '340px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)' }}
+              >
+                Tu navegador no soporta el video.
+              </video>
+            </div>
           </div>
         </div>
+        {/* Espacio antes de testimonios */}
+        <div style={{ marginTop: '64px' }} />
+        <TestimoniosCarrusel />
       </section>
       {/* Espacio extra antes del footer */}
       <div style={{ marginTop: '80px' }} />
