@@ -42,9 +42,6 @@ const Navbar = () => {
           <Link href="/noticias" className={isActive('/noticias') ? 'active' : ''}>
             Noticias
           </Link>
-          <Link href="/contacto" className={isActive('/contacto') ? 'active' : ''}>
-            Contacto
-          </Link>
           
           {/* Dropdown Servicios */}
           <div 
