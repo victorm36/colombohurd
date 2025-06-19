@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { InformationCircleIcon } from '@heroicons/react/24/solid';
 
 export default function AsiloPage() {
   return (
@@ -169,8 +168,8 @@ export default function AsiloPage() {
             >
               Visita el sitio oficial de USCIS
             </a>
-          </div>
         </div>
+      </div>
       </section>
     </main>
   );

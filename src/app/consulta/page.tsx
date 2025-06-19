@@ -183,6 +183,7 @@ export default function ConsultaForm() {
     e.preventDefault();
     // Construir el objeto de datos para el correo
     const datos = {
+      ...respuestasUsuario,
       nombre,
       fechaNacimiento,
       nacionalidad,
