@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function NoticiasPage() {
   // Crear un array de 20 elementos para los cuadros
