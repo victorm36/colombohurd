@@ -86,6 +86,38 @@ body {
   width: 80%;
 }
 
+.nav-links .servicios-btn {
+  color: var(--blanco-suave);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+  background: none;
+}
+
+.nav-links .servicios-btn::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--dorado-elegante);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-links .servicios-btn:hover {
+  color: var(--dorado-elegante);
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.nav-links .servicios-btn:hover::after {
+  width: 80%;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -304,5 +336,16 @@ body {
 
 .animate-fade-in {
   animation: fadeInUp 1s ease-out;
+}
+
+.dropdown-link {
+  color: #111 !important;
+  opacity: 1 !important;
+  font-weight: 500;
+  background: none;
+}
+.dropdown-link:hover {
+  color: #b8860b !important;
+  background: none;
 }
 
